@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Home, Calendar, MessageCircle, FileText, User, ChevronLeft, X, Plus, ArrowRight, Mail, Lock, Stethoscope, UserCircle, Phone, MapPin, CalendarDays, LogOut, Camera, CheckCircle, TrendingUp, Scissors, Cpu, Heart, Leaf, BookOpen, Clock, ChevronRight, Paperclip, Send, AlertTriangle, PhoneCall, Shield, Star } from 'lucide-react';
+import { Home, Calendar, MessageCircle, FileText, User, ChevronLeft, X, Plus, ArrowRight, Mail, Lock, Stethoscope, UserCircle, Phone, MapPin, CalendarDays, LogOut, Camera, CheckCircle, TrendingUp, Scissors, Cpu, Heart, Leaf, BookOpen, Clock, ChevronRight, Paperclip, Send, AlertTriangle, PhoneCall, Shield, Star, Play, Image as ImageIcon, Upload, Video } from 'lucide-react';
 import { CustomButton } from './components/CustomButton';
 import { CustomInput } from './components/CustomInput';
 import { StatusBadge } from './components/StatusBadge';
 import { ImageWithFallback } from './components/figma/ImageWithFallback';
+import { EducationScreen } from './components/EducationScreen';
+import { ContentDetailScreen } from './components/ContentDetailScreen';
 
 type UserType = 'patient' | 'staff' | null;
-type Screen = 'get-started' | 'signup' | 'staff-login' | 'user-select' | 'login' | 'dashboard' | 'appointments' | 'appointment-detail' | 'request-appointment' | 'chat' | 'medical-records' | 'profile' | 'photos' | 'photo-comparison' | 'education' | 'article-detail';
+type Screen = 'get-started' | 'signup' | 'staff-login' | 'user-select' | 'login' | 'dashboard' | 'appointments' | 'appointment-detail' | 'request-appointment' | 'chat' | 'medical-records' | 'profile' | 'photos' | 'photo-comparison' | 'education' | 'article-detail' | 'content-detail';
 type Tab = 'home' | 'appointments' | 'chat' | 'records' | 'profile';
 
 interface Appointment {
@@ -44,6 +46,20 @@ interface Article {
   date: string;
 }
 
+interface EducationContent {
+  id: string;
+  title: string;
+  description: string;
+  type: 'video' | 'article' | 'gallery';
+  category: 'procedures' | 'technology' | 'recovery' | 'wellness';
+  thumbnail?: string;
+  videoUrl?: string;
+  duration?: string;
+  images?: string[];
+  date: string;
+  views?: number;
+}
+
 interface Message {
   id: string;
   text: string;
@@ -58,6 +74,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [selectedContent, setSelectedContent] = useState<EducationContent | null>(null);
   const [photoCategory, setPhotoCategory] = useState<'before' | 'during' | 'after' | 'progress'>('before');
   const [messageText, setMessageText] = useState('');
   
@@ -133,6 +150,117 @@ export default function App() {
       readTime: 6,
       content: 'La tecnología láser ha transformado la cirugía estética moderna, ofreciendo resultados más precisos y tiempos de recuperación más cortos...',
       date: '2025-11-10'
+    }
+  ]);
+
+  const [educationContent] = useState<EducationContent[]>([
+    {
+      id: 'v1',
+      title: 'Rinoplastia: Procedimiento Completo',
+      description: 'Video detallado del procedimiento de rinoplastia, técnicas utilizadas y resultados esperados.',
+      type: 'video',
+      category: 'procedures',
+      thumbnail: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800',
+      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      duration: '15:30',
+      date: '2025-11-15',
+      views: 1250
+    },
+    {
+      id: 'v2',
+      title: 'Mamoplastia de Aumento: Técnicas Modernas',
+      description: 'Explicación completa sobre los diferentes tipos de implantes y técnicas quirúrgicas.',
+      type: 'video',
+      category: 'procedures',
+      thumbnail: 'https://images.unsplash.com/photo-1581594549595-35f6edc7b762?w=800',
+      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      duration: '18:45',
+      date: '2025-11-12',
+      views: 980
+    },
+    {
+      id: 'v3',
+      title: 'Recuperación Post-Operatoria: Semana a Semana',
+      description: 'Guía visual completa del proceso de recuperación después de una cirugía estética.',
+      type: 'video',
+      category: 'recovery',
+      thumbnail: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800',
+      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      duration: '12:20',
+      date: '2025-11-10',
+      views: 1500
+    },
+    {
+      id: 'v4',
+      title: 'Tecnología Láser en Cirugía Facial',
+      description: 'Demostración de las últimas tecnologías láser utilizadas en procedimientos faciales.',
+      type: 'video',
+      category: 'technology',
+      thumbnail: 'https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?w=800',
+      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      duration: '10:15',
+      date: '2025-11-08',
+      views: 750
+    },
+    {
+      id: 'g1',
+      title: 'Resultados de Rinoplastia: Antes y Después',
+      description: 'Galería de casos reales mostrando los resultados naturales de nuestros procedimientos.',
+      type: 'gallery',
+      category: 'procedures',
+      thumbnail: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800',
+      images: [
+        'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800',
+        'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800',
+        'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800',
+        'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=800'
+      ],
+      date: '2025-11-14',
+      views: 2100
+    },
+    {
+      id: 'g2',
+      title: 'Instalaciones de la Clínica',
+      description: 'Tour virtual por nuestras instalaciones de última generación y quirófanos certificados.',
+      type: 'gallery',
+      category: 'wellness',
+      thumbnail: 'https://images.unsplash.com/photo-1519494140681-8b17d830a3e9?w=800',
+      images: [
+        'https://images.unsplash.com/photo-1519494140681-8b17d830a3e9?w=800',
+        'https://images.unsplash.com/photo-1666214280557-f1b5022eb634?w=800',
+        'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800',
+        'https://images.unsplash.com/photo-1631248054699-4a5c8fae2e3b?w=800'
+      ],
+      date: '2025-11-05',
+      views: 850
+    },
+    {
+      id: 'v5',
+      title: 'Cuidados Post-Operatorios en Casa',
+      description: 'Consejos prácticos para el cuidado en casa durante las primeras semanas de recuperación.',
+      type: 'video',
+      category: 'recovery',
+      thumbnail: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800',
+      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      duration: '14:00',
+      date: '2025-11-03',
+      views: 1320
+    },
+    {
+      id: 'g3',
+      title: 'Tecnología de Vanguardia',
+      description: 'Equipamiento médico de última generación utilizado en nuestros procedimientos.',
+      type: 'gallery',
+      category: 'technology',
+      thumbnail: 'https://images.unsplash.com/photo-1581594549595-35f6edc7b762?w=800',
+      images: [
+        'https://images.unsplash.com/photo-1581594549595-35f6edc7b762?w=800',
+        'https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?w=800',
+        'https://images.unsplash.com/photo-1583324113626-70df0f4deaab?w=800',
+        'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800'
+      ],
+      date: '2025-11-01',
+      views: 650
     }
   ]);
 
@@ -645,45 +773,123 @@ export default function App() {
       case 'home':
         return (
           <div className="space-y-6">
-            {/* Welcome */}
+            {/* Doctor Header Card */}
+            <div className="bg-gradient-to-br from-[#4C9AFF] to-[#3D8AEF] rounded-3xl p-6 shadow-lg">
+              <div className="flex items-start gap-4">
+                <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-white/30 shadow-lg flex-shrink-0">
+                  <ImageWithFallback
+                    src="https://images.unsplash.com/photo-1755189118414-14c8dacdb082?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBkb2N0b3IlMjBwb3J0cmFpdHxlbnwxfHx8fDE3NjMzOTM0MTB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                    alt="Dr. Martin B. Robles Mejía"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white/80 text-sm mb-1">Tu Doctor</p>
+                  <h3 className="text-white mb-1">Dr. Martin B. Robles Mejía</h3>
+                  <p className="text-white/90 text-sm">Cirujano Plástico Certificado</p>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-white/20">
+                <p className="text-white/90 text-sm leading-relaxed">
+                  "Bienvenida {patientData.name.split(' ')[0]}, estoy aquí para acompañarte en tu transformación con excelencia y naturalidad."
+                </p>
+              </div>
+            </div>
+
+            {/* Welcome Section */}
             <div>
-              <h1 className="text-[#1A1A1A] mb-1">Bienvenida, {patientData.name}</h1>
-              <p className="text-sm text-[#6B7280]">Tu centro de cirugía plástica premium</p>
+              <h2 className="text-[#1A1A1A] mb-1">Hola, {patientData.name.split(' ')[0]} 👋</h2>
+              <p className="text-sm text-[#6B7280]">¿Cómo podemos ayudarte hoy?</p>
             </div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white rounded-2xl p-6 shadow-sm">
-                <div className="w-12 h-12 rounded-full bg-[#4C9AFF]/10 flex items-center justify-center mb-4">
+            <div className="grid grid-cols-3 gap-3">
+              <div className="bg-white rounded-2xl p-4 shadow-sm text-center">
+                <div className="w-12 h-12 rounded-full bg-[#4C9AFF]/10 flex items-center justify-center mx-auto mb-3">
                   <Calendar className="w-6 h-6 text-[#4C9AFF]" />
                 </div>
-                <h2 className="text-[#1A1A1A] mb-1">{appointments.length}</h2>
-                <p className="text-sm text-[#6B7280]">Total Citas</p>
+                <h3 className="text-[#1A1A1A] mb-1">{appointments.length}</h3>
+                <p className="text-xs text-[#6B7280]">Citas</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 shadow-sm">
-                <div className="w-12 h-12 rounded-full bg-[#8B5CF6]/10 flex items-center justify-center mb-4">
+              <div className="bg-white rounded-2xl p-4 shadow-sm text-center">
+                <div className="w-12 h-12 rounded-full bg-[#8B5CF6]/10 flex items-center justify-center mx-auto mb-3">
                   <FileText className="w-6 h-6 text-[#8B5CF6]" />
                 </div>
-                <h2 className="text-[#1A1A1A] mb-1">{medicalRecords.length}</h2>
-                <p className="text-sm text-[#6B7280]">Registros Recientes</p>
+                <h3 className="text-[#1A1A1A] mb-1">{medicalRecords.length}</h3>
+                <p className="text-xs text-[#6B7280]">Registros</p>
+              </div>
+
+              <div className="bg-white rounded-2xl p-4 shadow-sm text-center">
+                <div className="w-12 h-12 rounded-full bg-[#10B981]/10 flex items-center justify-center mx-auto mb-3">
+                  <Camera className="w-6 h-6 text-[#10B981]" />
+                </div>
+                <h3 className="text-[#1A1A1A] mb-1">{photos.length}</h3>
+                <p className="text-xs text-[#6B7280]">Fotos</p>
               </div>
             </div>
 
-            {/* Upcoming Appointments */}
+            {/* Next Appointment Highlight */}
             {appointments.length > 0 && (
+              <div className="bg-gradient-to-r from-[#4C9AFF]/5 to-[#8B5CF6]/5 rounded-2xl p-5 border border-[#4C9AFF]/20">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-8 h-8 rounded-full bg-[#4C9AFF] flex items-center justify-center">
+                    <Calendar className="w-4 h-4 text-white" />
+                  </div>
+                  <h4 className="text-[#1A1A1A]">Próxima Cita</h4>
+                </div>
+                <div className="bg-white rounded-xl p-4 shadow-sm">
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex-1">
+                      <h4 className="text-[#1A1A1A] mb-1">{appointments[0].type}</h4>
+                      <p className="text-sm text-[#6B7280]">{appointments[0].doctor}</p>
+                    </div>
+                    <StatusBadge status={appointments[0].status} />
+                  </div>
+                  <div className="flex items-center gap-4 text-sm">
+                    <div className="flex items-center gap-2 text-[#6B7280]">
+                      <Calendar className="w-4 h-4" />
+                      <span>{formatDate(appointments[0].date)}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-[#6B7280]">
+                      <Clock className="w-4 h-4" />
+                      <span>{appointments[0].time}</span>
+                    </div>
+                  </div>
+                  {appointments[0].notes && (
+                    <p className="text-sm text-[#6B7280] mt-3 pt-3 border-t border-[rgba(0,0,0,0.08)]">
+                      {appointments[0].notes}
+                    </p>
+                  )}
+                  <button
+                    onClick={() => {
+                      setSelectedAppointment(appointments[0]);
+                      setScreen('appointment-detail');
+                    }}
+                    className="w-full mt-3 flex items-center justify-center gap-2 text-[#4C9AFF] hover:text-[#3D8AEF] transition-colors py-2"
+                  >
+                    <span className="text-sm">Ver detalles</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* All Appointments */}
+            {appointments.length > 1 && (
               <div>
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-[#1A1A1A]">Próximas Citas</h3>
+                  <h3 className="text-[#1A1A1A]">Otras Citas</h3>
                   <button
                     onClick={() => setActiveTab('appointments')}
-                    className="text-sm text-[#4C9AFF] hover:text-[#3D8AEF]"
+                    className="text-sm text-[#4C9AFF] hover:text-[#3D8AEF] flex items-center gap-1"
                   >
                     Ver todas
+                    <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
                 <div className="space-y-3">
-                  {appointments.slice(0, 3).map((apt) => (
+                  {appointments.slice(1, 3).map((apt) => (
                     <button
                       key={apt.id}
                       onClick={() => {
@@ -692,16 +898,13 @@ export default function App() {
                       }}
                       className="w-full bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all text-left"
                     >
-                      <div className="flex gap-4">
-                        <div className="w-12 h-12 rounded-full bg-[#4C9AFF]/10 flex items-center justify-center flex-shrink-0">
-                          <Calendar className="w-6 h-6 text-[#4C9AFF]" />
+                      <div className="flex gap-3 items-center">
+                        <div className="w-10 h-10 rounded-full bg-[#4C9AFF]/10 flex items-center justify-center flex-shrink-0">
+                          <Calendar className="w-5 h-5 text-[#4C9AFF]" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-[#1A1A1A] mb-1">{apt.type}</h4>
-                          <p className="text-sm text-[#6B7280]">{formatDate(apt.date)} • {apt.time}</p>
-                          {apt.notes && (
-                            <p className="text-sm text-[#6B7280] mt-1 line-clamp-2">{apt.notes}</p>
-                          )}
+                          <h4 className="text-[#1A1A1A] text-sm mb-1">{apt.type}</h4>
+                          <p className="text-xs text-[#6B7280]">{formatDate(apt.date)} • {apt.time}</p>
                         </div>
                         <StatusBadge status={apt.status} />
                       </div>
@@ -711,54 +914,52 @@ export default function App() {
               </div>
             )}
 
-            {/* Quick Access Grid */}
+            {/* Quick Actions */}
             <div>
-              <h3 className="text-[#1A1A1A] mb-4">Acceso Rápido</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <h3 className="text-[#1A1A1A] mb-4">Acciones Rápidas</h3>
+              <div className="grid grid-cols-2 gap-3">
                 <button
-                  onClick={() => setActiveTab('appointments')}
-                  className="bg-white rounded-2xl p-6 border border-[rgba(0,0,0,0.08)] hover:border-[#4C9AFF] transition-all text-left"
+                  onClick={() => setScreen('request-appointment')}
+                  className="bg-gradient-to-br from-[#4C9AFF] to-[#3D8AEF] rounded-2xl p-5 shadow-lg shadow-[#4C9AFF]/30 hover:shadow-xl transition-all text-left"
                 >
-                  <div className="w-14 h-14 rounded-full bg-[#4C9AFF]/10 flex items-center justify-center mb-4">
-                    <Calendar className="w-7 h-7 text-[#4C9AFF]" />
+                  <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-3">
+                    <Plus className="w-6 h-6 text-white" />
                   </div>
-                  <h4 className="text-[#1A1A1A] mb-1">Mis Citas</h4>
-                  <p className="text-xs text-[#6B7280]">Gestionar citas</p>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab('records')}
-                  className="bg-white rounded-2xl p-6 border border-[rgba(0,0,0,0.08)] hover:border-[#4C9AFF] transition-all text-left"
-                >
-                  <div className="w-14 h-14 rounded-full bg-[#8B5CF6]/10 flex items-center justify-center mb-4">
-                    <Camera className="w-7 h-7 text-[#8B5CF6]" />
-                  </div>
-                  <h4 className="text-[#1A1A1A] mb-1">Mis Fotos</h4>
-                  <p className="text-xs text-[#6B7280]">Progreso visual</p>
+                  <h4 className="text-white mb-1">Nueva Cita</h4>
+                  <p className="text-xs text-white/80">Agendar ahora</p>
                 </button>
 
                 <button
                   onClick={() => setActiveTab('chat')}
-                  className="bg-white rounded-2xl p-6 border border-[rgba(0,0,0,0.08)] hover:border-[#4C9AFF] transition-all text-left"
+                  className="bg-white rounded-2xl p-5 border-2 border-[#10B981]/20 hover:border-[#10B981] transition-all text-left shadow-sm"
                 >
-                  <div className="w-14 h-14 rounded-full bg-[#10B981]/10 flex items-center justify-center mb-4">
-                    <MessageCircle className="w-7 h-7 text-[#10B981]" />
+                  <div className="w-12 h-12 rounded-full bg-[#10B981]/10 flex items-center justify-center mb-3">
+                    <MessageCircle className="w-6 h-6 text-[#10B981]" />
                   </div>
-                  <h4 className="text-[#1A1A1A] mb-1">Mensajes</h4>
-                  <p className="text-xs text-[#6B7280]">Chat con doctor</p>
+                  <h4 className="text-[#1A1A1A] mb-1">Chat</h4>
+                  <p className="text-xs text-[#6B7280]">Enviar mensaje</p>
                 </button>
 
                 <button
-                  onClick={() => {
-                    setScreen('education');
-                  }}
-                  className="bg-white rounded-2xl p-6 border border-[rgba(0,0,0,0.08)] hover:border-[#4C9AFF] transition-all text-left"
+                  onClick={() => setActiveTab('records')}
+                  className="bg-white rounded-2xl p-5 border-2 border-[#8B5CF6]/20 hover:border-[#8B5CF6] transition-all text-left shadow-sm"
                 >
-                  <div className="w-14 h-14 rounded-full bg-[#F59E0B]/10 flex items-center justify-center mb-4">
-                    <BookOpen className="w-7 h-7 text-[#F59E0B]" />
+                  <div className="w-12 h-12 rounded-full bg-[#8B5CF6]/10 flex items-center justify-center mb-3">
+                    <Camera className="w-6 h-6 text-[#8B5CF6]" />
                   </div>
-                  <h4 className="text-[#1A1A1A] mb-1">Educación</h4>
-                  <p className="text-xs text-[#6B7280]">Recursos médicos</p>
+                  <h4 className="text-[#1A1A1A] mb-1">Mis Fotos</h4>
+                  <p className="text-xs text-[#6B7280]">Ver progreso</p>
+                </button>
+
+                <button
+                  onClick={() => setScreen('education')}
+                  className="bg-white rounded-2xl p-5 border-2 border-[#F59E0B]/20 hover:border-[#F59E0B] transition-all text-left shadow-sm"
+                >
+                  <div className="w-12 h-12 rounded-full bg-[#F59E0B]/10 flex items-center justify-center mb-3">
+                    <BookOpen className="w-6 h-6 text-[#F59E0B]" />
+                  </div>
+                  <h4 className="text-[#1A1A1A] mb-1">Recursos</h4>
+                  <p className="text-xs text-[#6B7280]">Educación</p>
                 </button>
               </div>
             </div>
@@ -1225,130 +1426,25 @@ export default function App() {
 
   // Education Screen
   if (screen === 'education') {
-    const [selectedCategory, setSelectedCategory] = useState<'procedures' | 'technology' | 'recovery' | 'wellness'>('procedures');
-
     return (
-      <div className="min-h-screen bg-[#F6F7FB] p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-4 mb-6">
-            <button
-              onClick={() => setScreen('dashboard')}
-              className="text-[#6B7280] hover:text-[#1A1A1A]"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            <div>
-              <h1 className="text-[#1A1A1A]">Educación Médica</h1>
-              <p className="text-sm text-[#6B7280]">Recursos y información sobre procedimientos</p>
-            </div>
-          </div>
+      <EducationScreen
+        content={educationContent}
+        onBack={() => setScreen('dashboard')}
+        onSelectContent={(content) => {
+          setSelectedContent(content);
+          setScreen('content-detail');
+        }}
+      />
+    );
+  }
 
-          {/* Featured Article */}
-          {articles[0] && (
-            <div className="mb-6">
-              <h3 className="text-[#1A1A1A] mb-4">Artículo Destacado</h3>
-              <button
-                onClick={() => {
-                  setSelectedArticle(articles[0]);
-                  setScreen('article-detail');
-                }}
-                className="w-full bg-gradient-to-br from-[#4C9AFF]/10 to-[#4C9AFF]/5 rounded-2xl p-6 border border-[#4C9AFF]/30 hover:shadow-lg transition-all text-left"
-              >
-                <h4 className="text-[#1A1A1A] mb-2 line-clamp-2">{articles[0].title}</h4>
-                <p className="text-sm text-[#6B7280] mb-3 line-clamp-3">{articles[0].excerpt}</p>
-                <div className="flex items-center gap-4 text-xs text-[#6B7280]">
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    {articles[0].readTime} min
-                  </span>
-                  <span className="text-[#4C9AFF]">{articles[0].category}</span>
-                </div>
-              </button>
-            </div>
-          )}
-
-          {/* Categories */}
-          <div className="mb-6">
-            <h3 className="text-[#1A1A1A] mb-4">Categorías</h3>
-            <div className="flex gap-3 overflow-x-auto pb-2">
-              {[
-                { key: 'procedures' as const, label: 'Procedimientos', color: '#4C9AFF', icon: Scissors },
-                { key: 'technology' as const, label: 'Tecnología', color: '#8B5CF6', icon: Cpu },
-                { key: 'recovery' as const, label: 'Recuperación', color: '#10B981', icon: Heart },
-                { key: 'wellness' as const, label: 'Bienestar', color: '#F59E0B', icon: Leaf }
-              ].map(({ key, label, color, icon: Icon }) => {
-                const count = articles.filter(a => a.category === key).length;
-                return (
-                  <button
-                    key={key}
-                    onClick={() => setSelectedCategory(key)}
-                    className={`flex-shrink-0 rounded-2xl p-4 border-2 transition-all ${
-                      selectedCategory === key
-                        ? 'border-[#4C9AFF] shadow-lg'
-                        : 'border-transparent bg-white'
-                    }`}
-                    style={{
-                      backgroundColor: selectedCategory === key ? `${color}15` : undefined
-                    }}
-                  >
-                    <div
-                      className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 mx-auto`}
-                      style={{
-                        backgroundColor: selectedCategory === key ? color : `${color}15`,
-                        color: selectedCategory === key ? 'white' : color
-                      }}
-                    >
-                      <Icon className="w-6 h-6" />
-                    </div>
-                    <p className="text-sm text-[#1A1A1A] text-center whitespace-nowrap">{label}</p>
-                    <p className="text-xs text-[#6B7280] text-center">{count}</p>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Articles List */}
-          <div className="space-y-4">
-            {articles.filter(a => a.category === selectedCategory).length === 0 ? (
-              <div className="text-center py-16">
-                <BookOpen className="w-12 h-12 text-[#4C9AFF] mx-auto mb-4" />
-                <h3 className="text-[#1A1A1A] mb-2">No hay artículos en esta categoría</h3>
-                <p className="text-sm text-[#6B7280]">Pronto agregaremos más contenido educativo</p>
-              </div>
-            ) : (
-              articles.filter(a => a.category === selectedCategory).map((article) => (
-                <button
-                  key={article.id}
-                  onClick={() => {
-                    setSelectedArticle(article);
-                    setScreen('article-detail');
-                  }}
-                  className="w-full bg-white rounded-xl p-4 border border-[rgba(0,0,0,0.08)] hover:shadow-lg transition-all text-left"
-                >
-                  <div className="flex gap-4">
-                    <div className="w-12 h-12 rounded-full bg-[#4C9AFF]/10 flex items-center justify-center flex-shrink-0">
-                      <BookOpen className="w-6 h-6 text-[#4C9AFF]" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-[#1A1A1A] mb-1 line-clamp-2">{article.title}</h4>
-                      <p className="text-sm text-[#6B7280] mb-2 line-clamp-2">{article.excerpt}</p>
-                      <div className="flex items-center gap-4 text-xs text-[#6B7280]">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {article.readTime} min
-                        </span>
-                        <span className="text-[#4C9AFF]">{article.category}</span>
-                      </div>
-                    </div>
-                    <ChevronRight className="w-5 h-5 text-[#6B7280] flex-shrink-0" />
-                  </div>
-                </button>
-              ))
-            )}
-          </div>
-        </div>
-      </div>
+  // Content Detail Screen
+  if (screen === 'content-detail' && selectedContent) {
+    return (
+      <ContentDetailScreen
+        content={selectedContent}
+        onBack={() => setScreen('education')}
+      />
     );
   }
 
